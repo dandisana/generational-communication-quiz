@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What's Your Communication Style?</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy: #1B2A4A;
+    --navy-mid: #243352;
+    --navy-light: #2D4270;
+    --white: #FFFFFF;
+    --off-white: #F4F6FA;
+    --slate: #8FA3BF;
+    --slate-light: #C8D5E8;
+    --text: #1B2A4A;
+    --text-muted: #5A7099;
+    --boomer: #2563A8;
+    --genx: #1A7A5E;
+    --millennial: #7C3ABA;
+    --genz: #C4700A;
+    --border: #DDE4EF;
+  }
+
+  html { font-size: 16px; }
+
+  body {
+    font-family: 'Georgia', serif;
+    background: var(--off-white);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 680px;
+  }
+
+  /* HEADER */
+  .header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .header-eyebrow {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 16px;
+  }
+
+  .header h1 {
+    font-size: 28px;
+    font-weight: normal;
+    color: var(--navy);
+    line-height: 1.25;
+    margin-bottom: 12px;
+  }
+
+  .header h1 em {
+    font-style: italic;
+    color: var(--navy-light);
+  }
+
+  .header p {
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .divider {
+    width: 40px;
+    height: 2px;
+    background: var(--navy);
+    margin: 20px auto;
+  }
+
+  /* PROGRESS */
+  .progress-wrap {
+    margin-bottom: 32px;
+  }
+
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .progress-label {
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  .progress-count {
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+
+  .progress-bar-bg {
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--navy);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  /* QUESTION CARD */
+  .question-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 40px;
+    margin-bottom: 20px;
+  }
+
+  .question-number {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 16px;
+  }
+
+  .question-text {
+    font-size: 19px;
+    font-weight: normal;
+    color: var(--navy);
+    line-height: 1.4;
+    margin-bottom: 32px;
+  }
+
+  .scenario-tag {
+    display: inline-block;
+    font-family: 'Arial', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background: var(--off-white);
+    border: 1px solid var(--border);
+    padding: 3px 8px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+  }
+
+  /* OPTIONS */
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .option {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 18px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    background: var(--white);
+    text-align: left;
+    width: 100%;
+  }
+
+  .option:hover {
+    border-color: var(--navy-light);
+    background: var(--off-white);
+  }
+
+  .option.selected {
+    border-color: var(--navy);
+    background: var(--off-white);
+  }
+
+  .option.selected .option-marker {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: var(--white);
+  }
+
+  .option-marker {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border: 1.5px solid var(--slate-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--slate);
+    margin-top: 1px;
+    transition: all 0.15s ease;
+  }
+
+  .option-text {
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.55;
+  }
+
+  /* NAV */
+  .nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+  }
+
+  .btn {
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .btn-primary {
+    background: var(--navy);
+    color: var(--white);
+  }
+
+  .btn-primary:hover {
+    background: var(--navy-light);
+  }
+
+  .btn-primary:disabled {
+    background: var(--slate-light);
+    color: var(--white);
+    cursor: not-allowed;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--navy);
+    color: var(--navy);
+  }
+
+  /* INTRO SCREEN */
+  .intro-screen {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 48px 40px;
+    text-align: center;
+  }
+
+  .intro-screen h2 {
+    font-size: 22px;
+    font-weight: normal;
+    color: var(--navy);
+    margin-bottom: 16px;
+    line-height: 1.35;
+  }
+
+  .intro-screen p {
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 12px;
+    max-width: 460px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .intro-pills {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 28px 0 36px;
+  }
+
+  .intro-pill {
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 2px;
+    letter-spacing: 0.05em;
+  }
+
+  .pill-boomer { background: #EAF1FB; color: var(--boomer); }
+  .pill-genx { background: #E6F4EF; color: var(--genx); }
+  .pill-millennial { background: #F2EBF9; color: var(--millennial); }
+  .pill-genz { background: #FDF3E7; color: var(--genz); }
+
+  /* RESULTS */
+  .results-screen { display: none; }
+
+  .results-screen.visible { display: block; }
+
+  .results-header {
+    background: var(--navy);
+    color: var(--white);
+    border-radius: 4px 4px 0 0;
+    padding: 40px;
+    text-align: center;
+  }
+
+  .results-header .eyebrow {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 12px;
+  }
+
+  .results-header h2 {
+    font-size: 24px;
+    font-weight: normal;
+    margin-bottom: 6px;
+  }
+
+  .primary-gen {
+    font-size: 32px;
+    font-weight: normal;
+    font-style: italic;
+    margin-bottom: 8px;
+  }
+
+  .results-body {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    padding: 40px;
+  }
+
+  /* SPREAD BARS */
+  .spread-title {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 24px;
+  }
+
+  .gen-bar-row {
+    margin-bottom: 20px;
+  }
+
+  .gen-bar-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 6px;
+  }
+
+  .gen-name {
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .gen-sub {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-left: 6px;
+    font-weight: normal;
+  }
+
+  .gen-pct {
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+  }
+
+  .gen-bar-bg {
+    height: 8px;
+    background: var(--off-white);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .gen-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.8s ease;
+  }
+
+  .fill-boomer { background: var(--boomer); }
+  .fill-genx { background: var(--genx); }
+  .fill-millennial { background: var(--millennial); }
+  .fill-genz { background: var(--genz); }
+
+  /* GEN PROFILES */
+  .profile-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 32px 0;
+  }
+
+  .profile-section-title {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 20px;
+  }
+
+  .profile-card {
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 24px;
+    margin-bottom: 12px;
+  }
+
+  .profile-card.primary {
+    border-color: var(--navy);
+    background: var(--off-white);
+  }
+
+  .profile-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .profile-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .dot-boomer { background: var(--boomer); }
+  .dot-genx { background: var(--genx); }
+  .dot-millennial { background: var(--millennial); }
+  .dot-genz { background: var(--genz); }
+
+  .profile-card-name {
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+
+  .profile-card-years {
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-left: auto;
+  }
+
+  .profile-chunk-badge {
+    display: inline-block;
+    font-family: 'Arial', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 2px;
+    margin-bottom: 10px;
+  }
+
+  .badge-boomer { background: #EAF1FB; color: var(--boomer); }
+  .badge-genx { background: #E6F4EF; color: var(--genx); }
+  .badge-millennial { background: #F2EBF9; color: var(--millennial); }
+  .badge-genz { background: #FDF3E7; color: var(--genz); }
+
+  .profile-card p {
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.65;
+  }
+
+  .profile-card .key-q {
+    font-family: 'Georgia', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--navy);
+    margin-top: 10px;
+  }
+
+  /* INSIGHT BOX */
+  .insight-box {
+    background: var(--navy);
+    border-radius: 3px;
+    padding: 28px 32px;
+    margin-top: 32px;
+    text-align: center;
+  }
+
+  .insight-box p {
+    font-family: 'Georgia', serif;
+    font-size: 15px;
+    font-style: italic;
+    color: var(--white);
+    line-height: 1.65;
+  }
+
+  .insight-box .insight-label {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 12px;
+    font-style: normal;
+  }
+
+  .restart-btn {
+    margin-top: 32px;
+    text-align: center;
+  }
+
+  /* TRANSITIONS */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  .fade-in {
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 540px) {
+    .question-card { padding: 28px 22px; }
+    .results-header { padding: 32px 24px; }
+    .results-body { padding: 28px 22px; }
+    .intro-screen { padding: 36px 24px; }
+    body { padding: 24px 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-eyebrow">Chunking Up & Down · Communication Style Quiz</div>
+    <h1>How do you <em>naturally</em> communicate?</h1>
+    <div class="divider"></div>
+    <p>10 workplace scenarios. Choose the response that most closely reflects what you would actually do — not what you think is correct.</p>
+  </div>
+
+  <!-- INTRO SCREEN -->
+  <div id="intro-screen" class="screen active">
+    <div class="intro-screen">
+      <h2>Your communication style reveals<br>which level you default to</h2>
+      <p>Each of us tends to chunk at a particular level of abstraction — up toward vision and purpose, down toward detail and evidence, or sideways through comparison and analogy.</p>
+      <p>This quiz identifies your natural default — and shows you where you have range, and where you may be leaving people behind.</p>
+      <button class="btn btn-primary" onclick="startQuiz()" style="margin-top: 12px;">Begin →</button>
+    </div>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div id="quiz-screen" class="screen">
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span class="progress-label">Your progress</span>
+        <span class="progress-count" id="progress-count">1 of 10</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progress-bar" style="width: 10%"></div>
+      </div>
+    </div>
+
+    <div class="question-card fade-in" id="question-card">
+      <div class="scenario-tag" id="scenario-tag"></div>
+      <div class="question-number" id="question-number">Question 1</div>
+      <div class="question-text" id="question-text"></div>
+      <div class="options" id="options-container"></div>
+    </div>
+
+    <div class="nav">
+      <button class="btn btn-ghost" id="back-btn" onclick="prevQuestion()" style="visibility: hidden;">← Back</button>
+      <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()" disabled>Next →</button>
+    </div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div id="results-screen" class="screen">
+    <div class="results-header">
+      <div class="eyebrow">Your Communication Profile</div>
+      <h2>Your dominant style is</h2>
+      <div class="primary-gen" id="result-primary-gen"></div>
+      <div style="font-family: Arial, sans-serif; font-size: 14px; color: var(--slate); margin-top: 4px;" id="result-chunk-style"></div>
+    </div>
+    <div class="results-body">
+
+      <div class="spread-title">Your Communication Spread</div>
+
+      <div class="gen-bar-row">
+        <div class="gen-bar-label">
+          <span class="gen-name">Baby Boomer <span class="gen-sub">Chunk Down</span></span>
+          <span class="gen-pct" id="pct-boomer">0%</span>
+        </div>
+        <div class="gen-bar-bg"><div class="gen-bar-fill fill-boomer" id="bar-boomer" style="width:0%"></div></div>
+      </div>
+
+      <div class="gen-bar-row">
+        <div class="gen-bar-label">
+          <span class="gen-name">Gen X <span class="gen-sub">Lateral / Pragmatic</span></span>
+          <span class="gen-pct" id="pct-genx">0%</span>
+        </div>
+        <div class="gen-bar-bg"><div class="gen-bar-fill fill-genx" id="bar-genx" style="width:0%"></div></div>
+      </div>
+
+      <div class="gen-bar-row">
+        <div class="gen-bar-label">
+          <span class="gen-name">Millennial <span class="gen-sub">Chunk Up</span></span>
+          <span class="gen-pct" id="pct-millennial">0%</span>
+        </div>
+        <div class="gen-bar-bg"><div class="gen-bar-fill fill-millennial" id="bar-millennial" style="width:0%"></div></div>
+      </div>
+
+      <div class="gen-bar-row">
+        <div class="gen-bar-label">
+          <span class="gen-name">Gen Z <span class="gen-sub">Chunk Sideways</span></span>
+          <span class="gen-pct" id="pct-genz">0%</span>
+        </div>
+        <div class="gen-bar-bg"><div class="gen-bar-fill fill-genz" id="bar-genz" style="width:0%"></div></div>
+      </div>
+
+      <hr class="profile-divider">
+
+      <div class="profile-section-title">What each style means at work</div>
+
+      <div class="profile-card" id="profile-boomer">
+        <div class="profile-card-header">
+          <div class="profile-dot dot-boomer"></div>
+          <span class="profile-card-name">Baby Boomer</span>
+          <span class="profile-card-years">Born 1946–1964</span>
+        </div>
+        <span class="profile-chunk-badge badge-boomer">Default: Chunk Down</span>
+        <p>You communicate through track record, experience, and demonstrated specifics. You build authority by showing what you've done. You distrust abstract vision without evidence, and you earn credibility through concrete detail.</p>
+        <p class="key-q">"What have you actually done?"</p>
+      </div>
+
+      <div class="profile-card" id="profile-genx">
+        <div class="profile-card-header">
+          <div class="profile-dot dot-genx"></div>
+          <span class="profile-card-name">Generation X</span>
+          <span class="profile-card-years">Born 1965–1980</span>
+        </div>
+        <span class="profile-chunk-badge badge-genx">Default: Lateral / Pragmatic</span>
+        <p>You are sceptical of both grand vision and excessive detail. You want the logic, the trade-offs, the honest assessment. You find comparisons and precedents persuasive — show you what's worked elsewhere and you'll engage. You are often the most versatile communicator in the room.</p>
+        <p class="key-q">"Does this actually make sense?"</p>
+      </div>
+
+      <div class="profile-card" id="profile-millennial">
+        <div class="profile-card-header">
+          <div class="profile-dot dot-millennial"></div>
+          <span class="profile-card-name">Millennial</span>
+          <span class="profile-card-years">Born 1981–1996</span>
+        </div>
+        <span class="profile-chunk-badge badge-millennial">Default: Chunk Up</span>
+        <p>You lead with purpose, meaning, and values. You need to know why something matters before you can engage with what it is. You respond strongly to vision and narrative, and you struggle with communications that are purely operational or transactional.</p>
+        <p class="key-q">"Why should I care?"</p>
+      </div>
+
+      <div class="profile-card" id="profile-genz">
+        <div class="profile-card-header">
+          <div class="profile-dot dot-genz"></div>
+          <span class="profile-card-name">Generation Z</span>
+          <span class="profile-card-years">Born 1997–2012</span>
+        </div>
+        <span class="profile-chunk-badge badge-genz">Default: Chunk Sideways</span>
+        <p>You think in comparisons, analogies, and cross-domain references. You process information laterally — like a network rather than a hierarchy. You shift between levels quickly and expect others to keep up. You are highly attuned to what's happening elsewhere.</p>
+        <p class="key-q">"What else is like this?"</p>
+      </div>
+
+      <div class="insight-box">
+        <div class="insight-label">The Leadership Implication</div>
+        <p id="insight-text">"A leader who can only operate at one level will always leave someone behind. Your spread tells you who you're reaching — and who you may be missing."</p>
+      </div>
+
+      <div class="restart-btn">
+        <button class="btn btn-ghost" onclick="restartQuiz()">Retake Quiz</button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+// B = Boomer (chunk down), X = Gen X (lateral), M = Millennial (chunk up), Z = Gen Z (sideways)
+
+const questions = [
+  {
+    scenario: "Giving a team briefing",
+    text: "You're briefing your team on a new initiative. How do you naturally open?",
+    options: [
+      { text: "You walk through what the initiative involves, step by step, drawing on a previous project to show how similar work was handled.", gen: "B" },
+      { text: "You explain why the organisation is doing this now — what's changing in the environment and what problem it solves.", gen: "X" },
+      { text: "You start with the bigger purpose: what this means for the team's direction and why it matters beyond just the task.", gen: "M" },
+      { text: "You open with a reference — a competitor who did something similar, or an industry trend that makes this timely.", gen: "Z" }
+    ]
+  },
+  {
+    scenario: "Receiving a new directive",
+    text: "The Prime Minister announces a major policy shift affecting your Ministry. Your first instinct is to ask:",
+    options: [
+      { text: "\"What specifically is changing on the ground, and what does implementation look like for my division?\"", gen: "B" },
+      { text: "\"What's the evidence base behind this, and what are the risks if execution falls short?\"", gen: "X" },
+      { text: "\"How does this connect to what the civil service has committed to? Does this advance the public good we're here to serve?\"", gen: "M" },
+      { text: "\"Which other countries or jurisdictions have implemented something similar, and what were the outcomes?\"", gen: "Z" }
+    ]
+  },
+  {
+    scenario: "Making a recommendation",
+    text: "You're putting up a recommendation to your Minister or Secretary General. You build your case by:",
+    options: [
+      { text: "Leading with a specific precedent — a policy or programme from your own experience that demonstrates the approach works.", gen: "B" },
+      { text: "Laying out the logic clearly — the problem, the options considered, the trade-offs, and why this recommendation wins.", gen: "X" },
+      { text: "Anchoring the recommendation in a national principle or policy commitment already on the table, showing how this advances it.", gen: "M" },
+      { text: "Showing what comparable governments or agencies are doing, and using their track record as supporting evidence.", gen: "Z" }
+    ]
+  },
+  {
+    scenario: "Handling pushback",
+    text: "A colleague challenges your proposal in a meeting. Your instinct is to:",
+    options: [
+      { text: "Share a concrete precedent — a time when the approach you're proposing was tested and delivered results.", gen: "B" },
+      { text: "Acknowledge the concern directly, then walk through your reasoning step by step to show where you weighed it up.", gen: "X" },
+      { text: "Reframe the discussion around the shared goal — \"We both want the same outcome; the question is which path gets us there.\"", gen: "M" },
+      { text: "Point to how others in comparable situations have navigated the same objection.", gen: "Z" }
+    ]
+  },
+  {
+    scenario: "Writing an important email",
+    text: "You need to write an email to a sceptical stakeholder. You naturally start with:",
+    options: [
+      { text: "The specific facts, data, or outcomes you want them to see — leading with the evidence.", gen: "B" },
+      { text: "A clear statement of what you're asking for and why, with your reasoning laid out concisely.", gen: "X" },
+      { text: "The broader context — what's at stake and why this matters — before getting to the request.", gen: "M" },
+      { text: "A reference or benchmark that frames your ask in terms of what others are already doing.", gen: "Z" }
+    ]
+  },
+  {
+    scenario: "Running a meeting",
+    text: "You're chairing a meeting that's losing focus. You bring it back by:",
+    options: [
+      { text: "Grounding the group in specifics — \"Let's get concrete. What exactly happened, and what do the numbers say?\"", gen: "B" },
+      { text: "Cutting to the decision — \"We're going around in circles. Let's be clear about what we're actually deciding today.\"", gen: "X" },
+      { text: "Reconnecting to purpose — \"Let's step back. Why are we making this decision, and what are we trying to achieve?\"", gen: "M" },
+      { text: "Offering a frame from outside — \"There's an interesting parallel here. Let me share how a similar situation was handled elsewhere.\"", gen: "Z" }
+    ]
+  },
+  {
+    scenario: "Giving feedback",
+    text: "You're giving developmental feedback to a team member. You tend to:",
+    options: [
+      { text: "Refer to specific incidents — what you observed, when, and what the impact was.", gen: "B" },
+      { text: "Be direct and balanced — name the gap clearly, explain why it matters, and suggest a practical fix.", gen: "X" },
+      { text: "Connect the feedback to the person's potential and what you see them becoming — frame it as investment, not criticism.", gen: "M" },
+      { text: "Use an external reference — how a skill is valued in the market, or how others at a similar stage have developed.", gen: "Z" }
+    ]
+  },
+  {
+    scenario: "Responding to uncertainty",
+    text: "Your organisation is facing an uncertain period. In communicating with your team, you prioritise:",
+    options: [
+      { text: "Focusing on what you know for certain — the facts on the ground and the immediate next steps.", gen: "B" },
+      { text: "Being honest about what you don't know while laying out the options you're working through.", gen: "X" },
+      { text: "Reminding the team of the values and purpose that don't change, regardless of circumstance.", gen: "M" },
+      { text: "Contextualising the uncertainty — how similar organisations are navigating it, and what the broader picture looks like.", gen: "Z" }
+    ]
+  },
+  {
+    scenario: "Persuading a peer",
+    text: "You need to bring a counterpart from another Ministry or agency on board with your position. Your most natural move is to:",
+    options: [
+      { text: "Walk them through precedents from your own Ministry's work — what you've done before and why it delivered.", gen: "B" },
+      { text: "Make the logical case — the data, the policy rationale, and the risk of not aligning.", gen: "X" },
+      { text: "Appeal to a shared public service value or national objective you know they're committed to.", gen: "M" },
+      { text: "Point to what a comparable government ministry or agency has already done successfully.", gen: "Z" }
+    ]
+  },
+  {
+    scenario: "Closing a presentation",
+    text: "You've just finished presenting to a senior audience. You close by:",
+    options: [
+      { text: "Summarising the key facts and restating the specific recommendation with a clear ask.", gen: "B" },
+      { text: "Acknowledging the key tensions honestly and telling them exactly what decision you need from them.", gen: "X" },
+      { text: "Returning to the bigger picture — why this matters, what it represents, and what it makes possible.", gen: "M" },
+      { text: "Leaving them with a striking external reference or benchmark that makes your argument feel inevitable.", gen: "Z" }
+    ]
+  }
+];
+
+let currentQ = 0;
+let answers = []; // stores the shuffled option index chosen
+let scores = { B: 0, X: 0, M: 0, Z: 0 };
+
+// Fixed shuffle orders per question — varied so no consistent B/X/M/Z pattern is visible
+const shuffleOrders = [
+  [2, 0, 3, 1], // Q1
+  [1, 3, 0, 2], // Q2
+  [3, 1, 2, 0], // Q3
+  [0, 2, 1, 3], // Q4
+  [2, 3, 0, 1], // Q5
+  [1, 0, 3, 2], // Q6
+  [3, 2, 1, 0], // Q7
+  [0, 3, 2, 1], // Q8
+  [2, 1, 3, 0], // Q9
+  [1, 2, 0, 3], // Q10
+];
+
+function getShuffledOptions(qIndex) {
+  const order = shuffleOrders[qIndex];
+  return order.map(i => questions[qIndex].options[i]);
+}
+
+function startQuiz() {
+  document.getElementById('intro-screen').classList.remove('active');
+  document.getElementById('quiz-screen').classList.add('active');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const card = document.getElementById('question-card');
+  card.classList.remove('fade-in');
+  void card.offsetWidth;
+  card.classList.add('fade-in');
+
+  const q = questions[currentQ];
+  const shuffled = getShuffledOptions(currentQ);
+
+  document.getElementById('scenario-tag').textContent = q.scenario;
+  document.getElementById('question-number').textContent = `Question ${currentQ + 1}`;
+  document.getElementById('question-text').textContent = q.text;
+  document.getElementById('progress-count').textContent = `${currentQ + 1} of ${questions.length}`;
+  document.getElementById('progress-bar').style.width = `${((currentQ + 1) / questions.length) * 100}%`;
+
+  const container = document.getElementById('options-container');
+  container.innerHTML = '';
+  const labels = ['A', 'B', 'C', 'D'];
+
+  shuffled.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option' + (answers[currentQ] === i ? ' selected' : '');
+    btn.innerHTML = `<span class="option-marker">${labels[i]}</span><span class="option-text">${opt.text}</span>`;
+    btn.onclick = () => selectOption(i);
+    container.appendChild(btn);
+  });
+
+  document.getElementById('next-btn').disabled = answers[currentQ] === undefined;
+  document.getElementById('back-btn').style.visibility = currentQ > 0 ? 'visible' : 'hidden';
+  document.getElementById('next-btn').textContent = currentQ === questions.length - 1 ? 'See Results →' : 'Next →';
+}
+
+function selectOption(index) {
+  answers[currentQ] = index;
+  document.querySelectorAll('.option').forEach((el, i) => {
+    el.classList.toggle('selected', i === index);
+  });
+  document.getElementById('next-btn').disabled = false;
+}
+
+function nextQuestion() {
+  if (answers[currentQ] === undefined) return;
+  if (currentQ < questions.length - 1) {
+    currentQ++;
+    renderQuestion();
+  } else {
+    showResults();
+  }
+}
+
+function prevQuestion() {
+  if (currentQ > 0) {
+    currentQ--;
+    renderQuestion();
+  }
+}
+
+function showResults() {
+  // Tally scores using shuffled order
+  scores = { B: 0, X: 0, M: 0, Z: 0 };
+  answers.forEach((ansIndex, qIndex) => {
+    const shuffled = getShuffledOptions(qIndex);
+    const gen = shuffled[ansIndex].gen;
+    scores[gen]++;
+  });
+
+  const total = questions.length;
+  const pcts = {
+    B: Math.round((scores.B / total) * 100),
+    X: Math.round((scores.X / total) * 100),
+    M: Math.round((scores.M / total) * 100),
+    Z: Math.round((scores.Z / total) * 100)
+  };
+
+  // Find dominant
+  const dominant = Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
+  const genNames = { B: 'Baby Boomer', X: 'Generation X', M: 'Millennial', Z: 'Generation Z' };
+  const chunkStyles = { B: 'Default chunking direction: Down', X: 'Default chunking direction: Lateral', M: 'Default chunking direction: Up', Z: 'Default chunking direction: Sideways' };
+
+  document.getElementById('result-primary-gen').textContent = genNames[dominant];
+  document.getElementById('result-chunk-style').textContent = chunkStyles[dominant];
+
+  // Animate bars after short delay
+  setTimeout(() => {
+    ['B', 'X', 'M', 'Z'].forEach(g => {
+      const key = g === 'B' ? 'boomer' : g === 'X' ? 'genx' : g === 'M' ? 'millennial' : 'genz';
+      document.getElementById(`pct-${key}`).textContent = `${pcts[g]}%`;
+      document.getElementById(`bar-${key}`).style.width = `${pcts[g]}%`;
+    });
+  }, 200);
+
+  // Highlight dominant profile card
+  ['boomer', 'genx', 'millennial', 'genz'].forEach(k => {
+    document.getElementById(`profile-${k}`).classList.remove('primary');
+  });
+  const domKey = dominant === 'B' ? 'boomer' : dominant === 'X' ? 'genx' : dominant === 'M' ? 'millennial' : 'genz';
+  document.getElementById(`profile-${domKey}`).classList.add('primary');
+
+  // Personalised insight
+  const insights = {
+    B: "Your strength is credibility through specificity. The risk: when you lead with detail before purpose, you may lose the Millennials in the room before you've earned their engagement.",
+    X: "Your strength is logical clarity and intellectual honesty. The risk: your scepticism can read as disengagement to those who need to feel the vision first.",
+    M: "Your strength is connecting people to meaning and purpose. The risk: without chunking down to specifics, your vision can feel inspiring but unanchored.",
+    Z: "Your strength is lateral thinking and contextual intelligence. The risk: moving between levels so quickly can leave others behind who need to settle at one level first."
+  };
+  document.getElementById('insight-text').textContent = insights[dominant];
+
+  document.getElementById('quiz-screen').classList.remove('active');
+  document.getElementById('results-screen').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function restartQuiz() {
+  currentQ = 0;
+  answers = [];
+  scores = { B: 0, X: 0, M: 0, Z: 0 };
+  document.getElementById('results-screen').classList.remove('active');
+  document.getElementById('quiz-screen').classList.remove('active');
+  document.getElementById('intro-screen').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}</script>
+</body>
+</html>
